@@ -356,7 +356,7 @@ services:
       - PRODUCTION_PATH=/var/hyperledger/production
     
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: /bin/bash -c './scripts/script-${CHANNEL_NAME}.sh ${CHANNEL_NAME}; sleep 1000000'
+    command: /bin/bash -c './scripts/script-${CHANNEL_NAME}.sh ${CHANNEL_NAME}'
     #command: /bin/bash
     volumes:
         - /var/run/:/host/var/run/
