@@ -120,47 +120,7 @@ updateAnchorPeer() {
 	echo
 }
 
-retrieveConfigBlock(){
-  config_block_path=$1
-  PEER=0
-  SYSCHAINCODEID="testchainid"
-  setOrdererGlobals
-  if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		echo "peer channel fetch config $config_block_path -o $CORE_ORDERER_ADDRESS -c $SYSCHAINCODEID >&log.txt"
-		peer channel fetch config $config_block_path -o $CORE_ORDERER_ADDRESS -c $SYSCHAINCODEID >&log.txt 
-	else
-		echo "peer channel fetch config -o $CORE_ORDERER_ADDRESS --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c $SYSCHAINCODEID >&log.txt"
-		peer channel fetch config  -o $CORE_ORDERER_ADDRESS --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA  >&log.txt
-	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "retrieve genesis config block failed"
-	echo "===================== Config block using org \"$CORE_PEER_LOCALMSPID\" on \"$SYSCHAINCODEID\" is retrieved successfully ===================== "
-	echo	
 
-}
-
-updateConfigBlock(){
-  config_update_block_as_envelope=$1
-  
-  PEER=0
-  SYSCHAINCODEID="testchainid"
-  setOrdererGlobals
-  if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
-		echo "peer channel update -f $config_update_block_as_envelope -o $CORE_ORDERER_ADDRESS -c $SYSCHAINCODEID >&log.txt"
-		peer channel update -f $config_update_block_as_envelope -o $CORE_ORDERER_ADDRESS -c $SYSCHAINCODEID >&log.txt
-	else
-		echo "peer channel update -f $config config_update_block_as_envelope -o $CORE_ORDERER_ADDRESS --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c $SYSCHAINCODEID >&log.txt"
-		peer channel update -f $config_update_block_as_envelope -o $CORE_ORDERER_ADDRESS --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -c $SYSCHAINCODEID >&log.txt
-	fi
-	res=$?
-	cat log.txt
-	verifyResult $res "retrieve genesis config block failed"
-	echo "===================== Config block update using org \"$CORE_PEER_LOCALMSPID\" on \"$SYSCHAINCODEID\" is updated successfully ===================== "
-	echo	
-
-
-}
 installChaincode () {
 	PEER=$1
         CHAINCODE=$2
@@ -302,84 +262,84 @@ joinChannel 0 1 2 3
 ## Update anchor peers for 
 updateAnchorPeers 0 2 
 
-## Install chaincode on Peer0/Org0 and Peer2/Org1
-#installChaincode 0 chaincode_example02 mycc 1.0
-#installChaincode 2 chaincode_example02 mycc 1.0
-#
-##Instantiate chaincode on Peer2/Org1
-#echo "Instantiating chaincode ..."
-#instantiateChaincode 2 '{"Args":["init","a","100","b","200"]}' mycc 1.0
-#
-##Query on chaincode on Peer0/Org0
-#chaincodeQuery 0 '{"Args":["query","a"]}' mycc 100
-#
-##Invoke on chaincode on Peer0/Org0
-#echo "send Invoke transaction ..."
-#chaincodeInvoke 0 '{"Args":["invoke","a","b","10"]}' mycc
-#
-### Install chaincode on Peer3/Org1
-#installChaincode 3 chaincode_example02 mycc 1.0
-#
-##Query on chaincode on Peer3/Org1, check if the result is 90
-#chaincodeQuery 3 '{"Args":["query","a"]}' mycc 90
-#
-#echo
-#echo "===================== All GOOD, End-2-End chaincode_example02 test completed ===================== "
-#echo
-#echo "waiting 5s to start marbles02 deploying and invoke..."
-#sleep 5 
-#echo "===================== Start deploying marbles02 ===================== "
-#echo "Installing chaincode ..."
-#installChaincode 0 marbles02 marbles02 1.0
-#installChaincode 2 marbles02 marbles02 1.0
-#
-#echo "Instantiating chaincode ..."
-#instantiateChaincode 2 '{"Args":["init","100"]}' marbles02 1.0
-#
-#echo "Querying chaincode ..."
-#chaincodeQuery 0 '{"Args":["read","selftest"]}' marbles02 100
-#
-#echo "Invoking chaincode init_owner o0..."
-#chaincodeInvoke 0 '{"Args":["init_owner","o0","dummy0","United Marbles"]}' marbles02
-#
-#echo "Invoking chaincode init_owner o1 ..."
-#chaincodeInvoke 2 '{"Args":["init_owner","o1","dummy1","eMarbles"]}' marbles02
-#
-#echo "sleeping 3s"
-#sleep 3
-#
-#echo "Invoking chaincode init_marble m01~05..."
-#chaincodeInvoke 0 '{"Args":["init_marble","m01","red","1","o0","United Marbles"]}' marbles02
-#chaincodeInvoke 0 '{"Args":["init_marble","m02","red","1","o0","United Marbles"]}' marbles02
-#chaincodeInvoke 0 '{"Args":["init_marble","m03","red","1","o0","United Marbles"]}' marbles02
-#chaincodeInvoke 0 '{"Args":["init_marble","m04","red","1","o0","United Marbles"]}' marbles02
-#chaincodeInvoke 0 '{"Args":["init_marble","m05","red","1","o0","United Marbles"]}' marbles02
-#
-#echo "sleeping 3s"
-#sleep 3
-#
-#echo "Invoking chaincode init_marble m11~m15..."
-#chaincodeInvoke 2 '{"Args":["init_marble","m11","blue","30","o1","eMarbles"]}' marbles02
-#chaincodeInvoke 2 '{"Args":["init_marble","m12","blue","30","o1","eMarbles"]}' marbles02
-#chaincodeInvoke 2 '{"Args":["init_marble","m13","blue","30","o1","eMarbles"]}' marbles02
-#chaincodeInvoke 2 '{"Args":["init_marble","m14","blue","30","o1","eMarbles"]}' marbles02
-#chaincodeInvoke 2 '{"Args":["init_marble","m15","blue","30","o1","eMarbles"]}' marbles02
-#
-#echo "sleeping 3s"
-#sleep 3
-#echo "Invoking chaincode set_owner m01->o1..."
-#chaincodeInvoke 2 '{"Args":["set_owner","m01","o1","United Marbles"]}' marbles02
-#
-#echo "sleeping 3s"
-#sleep 3 
-#echo "Invoking chaincode init_marble m11->o0..."
-#chaincodeInvoke 2 '{"Args":["set_owner","m11","o0","eMarbles"]}' marbles02
-#
-#echo "============================= Deployed marbles02 and invoked OK ============================= "  
-#
-#echo "waiting 3s to start pos_slip deploying and invoke..."
-#sleep 3 
-#echo "===================== Start deploying pos_slip ===================== "
+# Install chaincode on Peer0/Org0 and Peer2/Org1
+installChaincode 0 chaincode_example02 mycc 1.0
+installChaincode 2 chaincode_example02 mycc 1.0
+
+#Instantiate chaincode on Peer2/Org1
+echo "Instantiating chaincode ..."
+instantiateChaincode 2 '{"Args":["init","a","100","b","200"]}' mycc 1.0
+
+#Query on chaincode on Peer0/Org0
+chaincodeQuery 0 '{"Args":["query","a"]}' mycc 100
+
+#Invoke on chaincode on Peer0/Org0
+echo "send Invoke transaction ..."
+chaincodeInvoke 0 '{"Args":["invoke","a","b","10"]}' mycc
+
+## Install chaincode on Peer3/Org1
+installChaincode 3 chaincode_example02 mycc 1.0
+
+#Query on chaincode on Peer3/Org1, check if the result is 90
+chaincodeQuery 3 '{"Args":["query","a"]}' mycc 90
+
+echo
+echo "===================== All GOOD, End-2-End chaincode_example02 test completed ===================== "
+echo
+echo "waiting 5s to start marbles02 deploying and invoke..."
+sleep 5 
+echo "===================== Start deploying marbles02 ===================== "
+echo "Installing chaincode ..."
+installChaincode 0 marbles02 marbles02 1.0
+installChaincode 2 marbles02 marbles02 1.0
+
+echo "Instantiating chaincode ..."
+instantiateChaincode 2 '{"Args":["init","100"]}' marbles02 1.0
+
+echo "Querying chaincode ..."
+chaincodeQuery 0 '{"Args":["read","selftest"]}' marbles02 100
+
+echo "Invoking chaincode init_owner o0..."
+chaincodeInvoke 0 '{"Args":["init_owner","o0","dummy0","United Marbles"]}' marbles02
+
+echo "Invoking chaincode init_owner o1 ..."
+chaincodeInvoke 2 '{"Args":["init_owner","o1","dummy1","eMarbles"]}' marbles02
+
+echo "sleeping 3s"
+sleep 3
+
+echo "Invoking chaincode init_marble m01~05..."
+chaincodeInvoke 0 '{"Args":["init_marble","m01","red","1","o0","United Marbles"]}' marbles02
+chaincodeInvoke 0 '{"Args":["init_marble","m02","red","1","o0","United Marbles"]}' marbles02
+chaincodeInvoke 0 '{"Args":["init_marble","m03","red","1","o0","United Marbles"]}' marbles02
+chaincodeInvoke 0 '{"Args":["init_marble","m04","red","1","o0","United Marbles"]}' marbles02
+chaincodeInvoke 0 '{"Args":["init_marble","m05","red","1","o0","United Marbles"]}' marbles02
+
+echo "sleeping 3s"
+sleep 3
+
+echo "Invoking chaincode init_marble m11~m15..."
+chaincodeInvoke 2 '{"Args":["init_marble","m11","blue","30","o1","eMarbles"]}' marbles02
+chaincodeInvoke 2 '{"Args":["init_marble","m12","blue","30","o1","eMarbles"]}' marbles02
+chaincodeInvoke 2 '{"Args":["init_marble","m13","blue","30","o1","eMarbles"]}' marbles02
+chaincodeInvoke 2 '{"Args":["init_marble","m14","blue","30","o1","eMarbles"]}' marbles02
+chaincodeInvoke 2 '{"Args":["init_marble","m15","blue","30","o1","eMarbles"]}' marbles02
+
+echo "sleeping 3s"
+sleep 3
+echo "Invoking chaincode set_owner m01->o1..."
+chaincodeInvoke 2 '{"Args":["set_owner","m01","o1","United Marbles"]}' marbles02
+
+echo "sleeping 3s"
+sleep 3 
+echo "Invoking chaincode init_marble m11->o0..."
+chaincodeInvoke 2 '{"Args":["set_owner","m11","o0","eMarbles"]}' marbles02
+
+echo "============================= Deployed marbles02 and invoked OK ============================= "  
+
+echo "waiting 3s to start pos_slip deploying and invoke..."
+sleep 3 
+echo "===================== Start deploying pos_slip ===================== "
 
 echo "Installing chaincode ..."
 installChaincode 0 pos_slip pos_slip 1.0
@@ -402,10 +362,5 @@ chaincodeQueryPrintResult 0 '{"Args":["readPosSlip","t22"]}' pos_slip
 chaincodeQueryPrintResult 0 '{"Args":["queryPosSlipsByMerId","ChinaUnionPayMerchantServices"]}' pos_slip     
 
 chaincodeQueryPrintResult 0 '{"Args":["queryPosSlipsByCardNo","9999999999"]}' pos_slip
-
-#updateConfigBlock channel/config_update_as_envelope.pb
-#retrieveConfigBlock channel/updated_config.block
-
-
 
 exit 0
