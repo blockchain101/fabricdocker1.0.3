@@ -1,0 +1,119 @@
+{
+    "name": "bctrustmachine-marbles-network",
+    "x-networkId": "marbles-network",
+    "x-type": "hlfv1",
+    "description": "Connection Profile for an IBM Blockchain Network",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Org2",
+        "credentialStore": {
+            "path": "./crypto"
+        }
+    },
+    "channels": {
+        "ch1": {
+            "orderers": [
+                "orderer.bctrustmachine.cn"
+            ],
+            "peers": {
+                "peer0.org2.bctrustmachine.cn": {
+                    "endorsingPeer": true,
+                    "chaincodeQuery": true,
+                    "ledgerQuery": true,
+                    "eventSource": true
+                },
+                "peer1.org2.bctrustmachine.cn": {
+                    "endorsingPeer": true,
+                    "chaincodeQuery": true,
+                    "ledgerQuery": true,
+                    "eventSource": true
+                }
+            },
+            "chaincodes": {
+                "marbles02": "1.0"
+            },
+            "x-blockDelay": 1000
+        }
+    },
+    "organizations": {
+        "Org2": {
+            "mspid": "Org2MSP",
+            "peers": [
+                "peer0.org2.bctrustmachine.cn",
+                "peer1.org2.bctrustmachine.cn"
+            ],
+            "certificateAuthorities": [
+                "ca0.org2.bctrustmachine.cn"
+            ],
+            "adminPrivateKey": {
+                "path": "./crypto/178333807cc4fa1426d80377a176d57d571f2d4b2d88f8ec7d2cd868af8d9a03-priv"
+            },
+            "signedCert": {
+                "path": "./crypto/178333807cc4fa1426d80377a176d57d571f2d4b2d88f8ec7d2cd868af8d9a03-pub"
+            }
+        }
+    },
+    "orderers": {
+        "orderer.bctrustmachine.cn": {
+            "url": "grpcs://orderer.bctrustmachine.cn:7050",
+            "grpcOptions": {
+                "ssl-target-name-override": null,
+                "grpc.http2.keepalive_time": 300,
+                "grpc.keepalive_time_ms": 300000,
+                "grpc.http2.keepalive_timeout": 35,
+                "grpc.keepalive_timeout_ms": 3500
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/ordererOrganizations/bctrustmachine.cn/tlsca/tlsca.bctrustmachine.cn-cert.pem"
+            }
+        }
+    },
+    "peers": {
+        "peer0.org2.bctrustmachine.cn": {
+            "url": "grpcs://peer0.org2.bctrustmachine.cn:7051",
+            "eventUrl": "grpcs://peer0.org2.bctrustmachine.cn:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": null,
+                "grpc.http2.keepalive_time": 300,
+                "grpc.keepalive_time_ms": 300000,
+                "grpc.http2.keepalive_timeout": 35,
+                "grpc.keepalive_timeout_ms": 3500
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/peerOrganizations/org2.bctrustmachine.cn/tlsca/tlsca.org2.bctrustmachine.cn-cert.pem"
+            }
+        },
+        "peer1.org2.bctrustmachine.cn": {
+            "url": "grpcs://peer1.org2.bctrustmachine.cn:7051",
+            "eventUrl": "grpcs://peer1.org2.bctrustmachine.cn:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": null,
+                "grpc.http2.keepalive_time": 300,
+                "grpc.keepalive_time_ms": 300000,
+                "grpc.http2.keepalive_timeout": 35,
+                "grpc.keepalive_timeout_ms": 3500
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/peerOrganizations/org2.bctrustmachine.cn/tlsca/tlsca.org2.bctrustmachine.cn-cert.pem"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca0.org2.bctrustmachine.cn": {
+            "url": "https://ca0.org2.bctrustmachine.cn:7054",
+            "httpOptions": {
+                "verify": true
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/peerOrganizations/org2.bctrustmachine.cn/ca/ca.org2.bctrustmachine.cn-cert.pem"
+            },
+            "registrar": [
+                {
+                    "enrollId": "admin",
+                    "enrollSecret": "adminpw"
+                }
+            ],
+            "caName": "ca0-org2"
+        }
+    }
+}

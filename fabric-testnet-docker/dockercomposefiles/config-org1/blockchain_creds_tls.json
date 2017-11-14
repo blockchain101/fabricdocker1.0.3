@@ -1,0 +1,116 @@
+{
+    "name": "bctrustmachine-marbles-network",
+    "x-networkId": "marbles-network",
+    "x-type": "hlfv1",
+    "description": "Connection Profile for an IBM Blockchain Network",
+    "version": "1.0.0",
+    "client": {
+        "organization": "Org1",
+        "credentialStore": {
+            "path": "./crypto"
+        }
+    },
+    "channels": {
+        "ch1": {
+            "orderers": [
+                "orderer.bctrustmachine.cn"
+            ],
+            "peers": {
+                "peer0.org1.bctrustmachine.cn": {
+                    "endorsingPeer": true,
+                    "chaincodeQuery": true,
+                    "ledgerQuery": true,
+                    "eventSource": true
+                },
+                "peer1.org1.bctrustmachine.cn": {
+                    "endorsingPeer": true,
+                    "chaincodeQuery": true,
+                    "ledgerQuery": true,
+                    "eventSource": true
+                }
+            },
+            "chaincodes": {
+                "marbles02": "1.0"
+            },
+            "x-blockDelay": 1000
+        }
+    },
+    "organizations": {
+        "Org1": {
+            "mspid": "Org1MSP",
+            "peers": [
+                "peer0.org1.bctrustmachine.cn",
+                "peer1.org1.bctrustmachine.cn"
+            ],
+            "certificateAuthorities": [
+                "ca0.org1.bctrustmachine.cn"
+            ],
+            "adminPrivateKey": {
+                "path": "./crypto/fceb621a05806dc1e97df8c71e5d5e58cf805e1d959fa92252fc5901e0a1255b-priv"
+            },
+            "signedCert": {
+                "path": "./crypto/fceb621a05806dc1e97df8c71e5d5e58cf805e1d959fa92252fc5901e0a1255b-pub"
+            }
+        }
+    },
+    "orderers": {
+        "orderer.bctrustmachine.cn": {
+            "url": "grpcs://orderer.bctrustmachine.cn:7050",
+            "grpcOptions": {
+                "ssl-target-name-override": null,
+                "grpc.http2.keepalive_time": 300,
+                "grpc.keepalive_time_ms": 300000,
+                "grpc.http2.keepalive_timeout": 35,
+                "grpc.keepalive_timeout_ms": 3500
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/ordererOrganizations/bctrustmachine.cn/tlsca/tlsca.bctrustmachine.cn-cert.pem"
+            }
+        }
+    },
+    "peers": {
+        "peer0.org1.bctrustmachine.cn": {
+            "url": "grpcs://peer0.org1.bctrustmachine.cn:7051",
+            "eventUrl": "grpcs://peer0.org1.bctrustmachine.cn:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": null,
+                "grpc.http2.keepalive_time": 300,
+                "grpc.keepalive_time_ms": 300000,
+                "grpc.http2.keepalive_timeout": 35,
+                "grpc.keepalive_timeout_ms": 3500
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/peerOrganizations/org1.bctrustmachine.cn/tlsca/tlsca.org1.bctrustmachine.cn-cert.pem"
+            }
+        },
+        "peer1.org1.bctrustmachine.cn": {
+            "url": "grpcs://peer1.org1.bctrustmachine.cn:7051",
+            "eventUrl": "grpcs://peer1.org1.bctrustmachine.cn:7053",
+            "grpcOptions": {
+                "ssl-target-name-override": null,
+                "grpc.http2.keepalive_time": 300,
+                "grpc.keepalive_time_ms": 300000,
+                "grpc.http2.keepalive_timeout": 35,
+                "grpc.keepalive_timeout_ms": 3500
+            },
+            "tlsCACerts": {
+                "path": "../crypto-config/peerOrganizations/org1.bctrustmachine.cn/tlsca/tlsca.org1.bctrustmachine.cn-cert.pem"
+            }
+        }
+    },
+    "certificateAuthorities": {
+        "ca0.org1.bctrustmachine.cn": {
+            "url": "http://ca0.org1.bctrustmachine.cn:7054",
+            "httpOptions": {
+                "verify": true
+            },
+            "registrar": [
+                {
+                    "enrollId": "admin",
+                    "enrollSecret": "adminpw"
+                }
+            ],
+            "caName": null
+        }
+    }
+}
